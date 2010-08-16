@@ -40,114 +40,108 @@ import java.util.Arrays;
  */
 /*package*/ final class IDsJSONImpl extends TwitterResponseImpl implements IDs {
 
-    private int[] ids;
-    private long previousCursor = -1;
-    private long nextCursor = -1;
-    private static final long serialVersionUID = -6585026560164704953L;
+  private long[] ids;
+  private long previousCursor = -1;
+  private long nextCursor = -1;
+  private static final long serialVersionUID = -6585026560164704953L;
 
-    private IDsJSONImpl(HttpResponse res) throws TwitterException {
-        super(res);
-    }
-    /*package*/ static IDs getFriendsIDs(HttpResponse res) throws TwitterException {
-        IDsJSONImpl friendsIDs = new IDsJSONImpl(res);
-        JSONObject json = res.asJSONObject();
-        JSONArray idList;
+  private IDsJSONImpl(HttpResponse res) throws TwitterException {
+    super(res);
+  }
+  /*package*/
+
+  static IDs getFriendsIDs(HttpResponse res) throws TwitterException {
+    IDsJSONImpl friendsIDs = new IDsJSONImpl(res);
+    JSONObject json = res.asJSONObject();
+    JSONArray idList;
+    try {
+      idList = json.getJSONArray("ids");
+      friendsIDs.ids = new long[idList.length()];
+      for (int i = 0; i < idList.length(); i++) {
         try {
-            idList = json.getJSONArray("ids");
-            friendsIDs.ids = new int[idList.length()];
-            for (int i = 0; i < idList.length(); i++) {
-                try {
-                    friendsIDs.ids[i] = Integer.parseInt(idList.getString(i));
-                } catch (NumberFormatException nfe) {
-                    throw new TwitterException("Twitter API returned malformed response: " + json, nfe);
-                }
-            }
-            friendsIDs.previousCursor = ParseUtil.getLong("previous_cursor", json);
-            friendsIDs.nextCursor = ParseUtil.getLong("next_cursor", json);
-        } catch (JSONException jsone) {
-            throw new TwitterException(jsone);
+          friendsIDs.ids[i] = Integer.parseInt(idList.getString(i));
+        } catch (NumberFormatException nfe) {
+          throw new TwitterException("Twitter API returned malformed response: " + json, nfe);
         }
-        return friendsIDs;
+      }
+      friendsIDs.previousCursor = ParseUtil.getLong("previous_cursor", json);
+      friendsIDs.nextCursor = ParseUtil.getLong("next_cursor", json);
+    } catch (JSONException jsone) {
+      throw new TwitterException(jsone);
     }
+    return friendsIDs;
+  }
 
 
-    /*package*/ static IDs getBlockIDs(HttpResponse res) throws TwitterException {
-        IDsJSONImpl blockIDs = new IDsJSONImpl(res);
-        JSONArray idList = null;
+  /*package*/
+
+  static IDs getBlockIDs(HttpResponse res) throws TwitterException {
+    IDsJSONImpl blockIDs = new IDsJSONImpl(res);
+    JSONArray idList = null;
+    try {
+      idList = res.asJSONArray();
+      blockIDs.ids = new long[idList.length()];
+      for (int i = 0; i < idList.length(); i++) {
         try {
-            idList = res.asJSONArray();
-            blockIDs.ids = new int[idList.length()];
-            for (int i = 0; i < idList.length(); i++) {
-                try {
-                    blockIDs.ids[i] = Integer.parseInt(idList.getString(i));
-                } catch (NumberFormatException nfe) {
-                    throw new TwitterException("Twitter API returned malformed response: " + idList, nfe);
-                }
-            }
-        } catch (JSONException jsone) {
-            throw new TwitterException(jsone);
+          blockIDs.ids[i] = Integer.parseInt(idList.getString(i));
+        } catch (NumberFormatException nfe) {
+          throw new TwitterException("Twitter API returned malformed response: " + idList, nfe);
         }
-        return blockIDs;
+      }
+    } catch (JSONException jsone) {
+      throw new TwitterException(jsone);
     }
+    return blockIDs;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public int[] getIDs() {
-        return ids;
-    }
+  /** {@inheritDoc} */
+  public long[] getIDs() {
+    return ids;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean hasPrevious(){
-        return 0 != previousCursor;
-    }
+  /** {@inheritDoc} */
+  public boolean hasPrevious() {
+    return 0 != previousCursor;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public long getPreviousCursor() {
-        return previousCursor;
-    }
+  /** {@inheritDoc} */
+  public long getPreviousCursor() {
+    return previousCursor;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean hasNext(){
-        return 0 != nextCursor;
-    }
+  /** {@inheritDoc} */
+  public boolean hasNext() {
+    return 0 != nextCursor;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public long getNextCursor() {
-        return nextCursor;
-    }
+  /** {@inheritDoc} */
+  public long getNextCursor() {
+    return nextCursor;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof IDs)) return false;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof IDs)) return false;
 
-        IDs iDs = (IDs) o;
+    IDs iDs = (IDs) o;
 
-        if (!Arrays.equals(ids, iDs.getIDs())) return false;
+    if (!Arrays.equals(ids, iDs.getIDs())) return false;
 
-        return true;
-    }
+    return true;
+  }
 
-    @Override
-    public int hashCode() {
-        return ids != null ? Arrays.hashCode(ids) : 0;
-    }
+  @Override
+  public int hashCode() {
+    return ids != null ? Arrays.hashCode(ids) : 0;
+  }
 
-    @Override
-    public String toString() {
-        return "IDsJSONImpl{" +
-                "ids=" + ids +
-                ", previousCursor=" + previousCursor +
-                ", nextCursor=" + nextCursor +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "IDsJSONImpl{" +
+        "ids=" + ids +
+        ", previousCursor=" + previousCursor +
+        ", nextCursor=" + nextCursor +
+        '}';
+  }
 }

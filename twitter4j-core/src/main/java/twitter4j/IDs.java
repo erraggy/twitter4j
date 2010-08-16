@@ -33,13 +33,13 @@ package twitter4j;
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
 public interface IDs extends TwitterResponse, CursorSupport, java.io.Serializable {
-    int[] getIDs();
+  long[] getIDs();
 
-    boolean hasPrevious();
+  boolean hasPrevious();
 
-    long getPreviousCursor();
+  long getPreviousCursor();
 
-    boolean hasNext();
+  boolean hasNext();
 
-    long getNextCursor();
+  long getNextCursor();
 }
