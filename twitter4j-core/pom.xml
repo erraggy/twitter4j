@@ -39,16 +39,6 @@
       </roles>
       <timezone>-9</timezone>
     </developer>
-    <developer>
-      <id>erraggy</id>
-      <email>robbie@robnrob.com</email>
-      <name>Robbie Coleman</name>
-      <url>http://robbie.robnrob.com/</url>
-      <timezone>-7</timezone>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
   </developers>
   <issueManagement>
     <system>Jira</system>
